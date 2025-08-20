@@ -1,0 +1,22 @@
+type Notification {
+  id: ID!
+  title: String!
+  body: String
+  read: Boolean!
+  created_at: DateTime!
+}
+
+type FcmToken {
+  id: ID!
+  token: String!
+  created_at: DateTime!
+}
+
+extend type Query {
+  notifications: [Notification!]! @paginate(builder: "App\\GraphQL\\Queries\\NotificationQuery@notifications") @guard
+}
+
+extend type Mutation {
+  uploadFcmToken(token: String!): FcmToken! @field(resolver: "App\\GraphQL\\Mutations\\FcmTokenMutation@upload") @guard
+  markNotificationAsRead(id: ID!): Notification! @field(resolver: "App\\GraphQL\\Mutations\\NotificationMutation@markAsRead") @guard
+}

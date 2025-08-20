@@ -15,16 +15,16 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('lastname');
-            $table->string('email')->unique();
+            $table->string('email')->nullable()->unique();
             $table->string('password');
-            $table->string('phone'); // required
+            $table->string('phone')->unique(); // required
             $table->string('type_car')->nullable();
             $table->decimal('earnings', 10, 2)->default(0);
             $table->unsignedInteger('total_orders')->default(0);
             $table->boolean('available')->default(true);
             $table->decimal('latitude', 10, 7)->nullable();
             $table->decimal('longitude', 10, 7)->nullable();
-            $table->enum('status', ['active', 'inactive', 'banned'])->default('active');
+            $table->enum('status', ['active', 'inactive', 'banned'])->default('inactive');
             $table->unsignedInteger('points')->default(0);
             $table->softDeletes();
             $table->timestamps();

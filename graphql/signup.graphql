@@ -1,0 +1,25 @@
+# schema.graphql
+
+type AuthPayloadClient {
+  user: Client!
+  token: String!
+}
+type AuthPayloadDriver {
+  user: Driver!
+  token: String!
+}
+input SignupDriverInput {
+  name: String!
+  lastname: String!
+  email: String!
+  phone: String!
+  password: String!
+  type_car: String!
+  latitude: Float
+  longitude: Float
+}
+
+extend type Mutation {
+  signupClient(phone: String!): AuthPayloadClient! @field(resolver: "AuthResolver@signupClient")
+  signupDriver(input: SignupDriverInput!): AuthPayloadDriver! @field(resolver: "AuthResolver@signupDriver")
+}

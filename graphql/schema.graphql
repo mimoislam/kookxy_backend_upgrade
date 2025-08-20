@@ -1,0 +1,96 @@
+scalar DateTime
+  @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\DateTime")
+scalar Date @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Date")
+
+
+#import cooker.graphql
+#import notification.graphql
+#import signup.graphql
+
+union UserType = Client | Driver 
+
+type AuthPayload {
+  user: UserType!
+  token: String!
+}
+
+input LoginInput {
+  email: String!
+  password: String!
+  type: String! # 'client' or 'driver'
+}
+type Client {
+  id: ID!
+  name: String
+  lastname: String
+  email: String
+  phone: String
+  points: Int!
+  created_at: DateTime!
+  updated_at: DateTime!
+}
+
+type Driver {
+  id: ID!
+  name: String!
+  lastname: String!
+  email: String
+  phone: String!
+  type_car: String
+  earnings: Float!
+  total_orders: Int!
+  available: Boolean!
+  latitude: Float
+  longitude: Float
+  status: DriverStatus!
+  points: Int!
+  created_at: DateTime!
+  updated_at: DateTime!
+}
+
+enum DriverStatus {
+  active
+  inactive
+  banned
+}
+
+"Inputs"
+input ClientSignupInput {
+  name: String!
+  lastname: String!
+  email: String
+  phone: String
+  password: String!
+}
+
+input ClientLoginInput {
+  email: String
+  phone: String
+  password: String!
+}
+
+input DriverSignupInput {
+  name: String!
+  lastname: String!
+  email: String!      # required
+  phone: String!      # required
+  password: String!
+  type_car: String
+}
+
+
+type Query {
+
+  me: UserType @auth
+  # Simple listings (optional)
+  clients: [Client!]! @paginate(model: "App\\Models\\Client")
+  drivers: [Driver!]! @paginate(model: "App\\Models\\Driver")
+}
+
+type Mutation {
+  # clientSignup(input: ClientSignupInput!): AuthPayload!
+
+  # driverSignup(input: DriverSignupInput!): AuthPayload!
+    login(input: LoginInput!): AuthPayload @field(resolver: "App\\GraphQL\\Mutations\\LoginResolver@login")
+
+}

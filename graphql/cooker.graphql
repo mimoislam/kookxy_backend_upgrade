@@ -1,0 +1,65 @@
+"""
+Cooker type (restaurant owned by a client)
+"""
+type Cooker {
+  id: ID!
+  client: Client!       # Relation to client
+  cooker_name: String!
+  description: String
+  address: String
+  name: String!
+  latitude: Float!
+  longitude: Float!
+  phone: String!
+  admin_commission: Float!
+  active: Boolean!
+  available_for_delivery: Boolean!
+  rating: Float!
+  created_at: DateTime!
+  updated_at: DateTime!
+  images: [Image!]! @morphMany
+
+}
+
+extend type Client {
+  cooker: Cooker
+}
+
+type Image {
+  id: ID!
+  url: String!
+  created_at: DateTime!
+  updated_at: DateTime!
+}
+"""
+Input for creating/updating a cooker
+"""
+input CookerInput {
+  cooker_name: String!
+  description: String
+  address: String
+  name: String!
+  latitude: Float!
+  longitude: Float!
+  phone: String!
+  admin_commission: Float
+  active: Boolean
+  available_for_delivery: Boolean
+  rating: Float
+}
+
+extend type Query {
+  cookers: [Cooker!]! @all
+  cooker(id: ID!): Cooker @find
+}
+
+extend type Mutation {
+  createCooker(input: CookerInput!): Cooker!
+    @create(model: "App\\Models\\Cooker")
+
+  updateCooker(id: ID!, input: CookerInput!): Cooker!
+    @update(model: "App\\Models\\Cooker")
+
+  deleteCooker(id: ID!): Cooker!
+    @delete(model: "App\\Models\\Cooker")
+}
